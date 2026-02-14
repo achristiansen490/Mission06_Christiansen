@@ -1,0 +1,113 @@
+@model Mission06_Christiansen.Models.Movie
+@*
+    AddMovie.cshtml
+    - Displays a form to add a new movie to the database
+    - Uses Bootstrap classes + your custom site.css styling for a clean UI
+    - Validation is handled using data annotations on the Movie model
+*@
+
+@{
+    ViewData["Title"] = "Add Movie";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-5">Add a Movie</h1>
+    <p class="text-muted">Enter movie information below and submit to save it.</p>
+</div>
+
+@* 
+    Form posts back to the same action:
+    - GET: shows empty form
+    - POST: validates and saves movie to DB
+*@
+<form asp-action="AddMovie" method="post" class="mx-auto" style="max-width: 700px;">
+
+    @* Shows a summary of validation errors (optional but helpful) *@
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <!-- Category -->
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label"></label>
+        <input asp-for="Category" class="form-control" placeholder="e.g., Adventure" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <!-- Title -->
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" placeholder="e.g., The Secret Life of Walter Mitty" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <!-- Year -->
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" placeholder="e.g., 2013" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <!-- Director -->
+    <div class="mb-3">
+        <label asp-for="Director" class="form-label"></label>
+        <input asp-for="Director" class="form-control" placeholder="e.g., Ben Stiller" />
+        <span asp-validation-for="Director" class="text-danger"></span>
+    </div>
+
+    <!-- Rating (Dropdown required) -->
+    <div class="mb-3">
+        <label asp-for="Rating" class="form-label"></label>
+        <select asp-for="Rating" class="form-select">
+            <option value="">Select a rating...</option>
+            <option value="G">G</option>
+            <option value="PG">PG</option>
+            <option value="PG-13">PG-13</option>
+            <option value="R">R</option>
+        </select>
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    @* Edited is OPTIONAL, so we include a blank option *@
+    <div class="mb-3">
+        <label asp-for="Edited" class="form-label"></label>
+        <select asp-for="Edited" class="form-select">
+            <option value="">(Optional)</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <span asp-validation-for="Edited" class="text-danger"></span>
+    </div>
+
+    <!-- Lent To (Optional) -->
+    <div class="mb-3">
+        <label asp-for="LentTo" class="form-label"></label>
+        <input asp-for="LentTo" class="form-control" placeholder="(Optional) Who did you lend it to?" />
+        <span asp-validation-for="LentTo" class="text-danger"></span>
+    </div>
+
+    <!-- Notes (Optional, max 25 chars) -->
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <input asp-for="Notes" class="form-control" placeholder="(Optional) Max 25 characters" maxlength="25" />
+        <div class="form-text">Max 25 characters.</div>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <!-- Submit + Cancel Buttons -->
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+
+        <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">
+            Cancel
+        </a>
+    </div>
+</form>
+
+@* 
+    This enables client-side validation (shows validation errors without reloading the page)
+    Requires _ValidationScriptsPartial in Views/Shared
+*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

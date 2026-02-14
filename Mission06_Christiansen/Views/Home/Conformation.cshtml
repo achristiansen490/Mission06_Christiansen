@@ -1,0 +1,31 @@
+@model Mission06_Christiansen.Models.Movie
+
+@{
+    ViewData["Title"] = "Confirmation";
+}
+
+<h2>Movie Added!</h2>
+
+<p><strong>Title:</strong> @Model.Title</p>
+<p><strong>Category:</strong> @Model.Category</p>
+<p><strong>Year:</strong> @Model.Year</p>
+<p><strong>Director:</strong> @Model.Director</p>
+<p><strong>Rating:</strong> @Model.Rating</p>
+
+@if (Model.Edited != null)
+{
+    <p><strong>Edited:</strong> @(Model.Edited.Value ? "Yes" : "No")</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.LentTo))
+{
+    <p><strong>Lent To:</strong> @Model.LentTo</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Notes))
+{
+    <p><strong>Notes:</strong> @Model.Notes</p>
+}
+
+<a class="btn btn-primary mt-3" asp-controller="Home" asp-action="AddMovie">Add Another Movie</a>
+<a class="btn btn-secondary mt-3" asp-controller="Home" asp-action="Index">Back Home</a>

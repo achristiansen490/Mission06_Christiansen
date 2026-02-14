@@ -1,0 +1,48 @@
+@*
+    GetToKnowJoel.cshtml
+    This page introduces Joel Hilton and provides:
+    - A link to Quick Wits Comedy
+    - A link to the Baconsale site
+    - An image that also links to the Baconsale site
+*@
+
+@{
+    ViewData["Title"] = "Get to Know Joel";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Get to Know Joel</h1>
+    <p class="text-muted">
+        Learn more about Joel Hilton and his comedy and podcast work.
+    </p>
+</div>
+
+<div class="mt-4 text-center">
+
+    <!-- Quick Wits Comedy link -->
+    <p class="lead">
+        See Joel perform at
+        <a href="https://www.qwcomedy.com/" target="_blank">
+            Quick Wits Comedy
+        </a>
+    </p>
+
+    <!-- Baconsale podcast link -->
+    <p class="lead">
+        Listen to the
+        <a href="https://baconsale.com/" target="_blank">
+            Baconsale Podcast
+        </a>
+    </p>
+
+    <!-- Clickable image linking to Baconsale -->
+    <div class="mt-4">
+        <a href="https://baconsale.com/" target="_blank">
+            <img src="~/images/BaconsaleKate.jpg"
+                 alt="Baconsale Podcast"
+                 class="img-fluid rounded shadow"
+                 style="max-width: 400px;" />
+        </a>
+    </div>
+
+</div>
