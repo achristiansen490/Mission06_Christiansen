@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // Needed for .Include()
 using Mission06_Christiansen.Data;
 using Mission06_Christiansen.Models;
 using System.Linq;
-using Mission06_Christiansen.Views.Home;
 
 namespace Mission06_Christiansen.Controllers;
 
 public class HomeController : Controller
 {
-    // Database context used to interact with the Movies table
+    // Database context used to interact with Movies/Categories tables
     private readonly MovieCollectionContext _context;
 
     // Constructor receives the DB context through dependency injection
@@ -19,25 +19,30 @@ public class HomeController : Controller
 
     /*
         INDEX PAGE
-        Displays all movies.
-        Also supports:
-        - Search (title, category, director)
-        - Rating filter
-        - Edited filter
+        - Displays all movies in the provided database
+        - Supports:
+          • Search (Title, Director, CategoryName)
+          • Rating filter
+          • Edited filter
+        Notes:
+        - We use Include(m => m.Category) so Category.CategoryName is available.
     */
     public IActionResult Index(string? search, string? rating, string? edited)
     {
-        // Start with all movies as a queryable collection
-        var query = _context.Movies.AsQueryable();
+        // Start with all movies, including Category so we can use CategoryName in search/display
+        var query = _context.Movies
+            .Include(m => m.Category)
+            .AsQueryable();
 
         // Search filter (case-insensitive)
         if (!string.IsNullOrWhiteSpace(search))
         {
             var s = search.Trim().ToLower();
+
             query = query.Where(m =>
                 (m.Title != null && m.Title.ToLower().Contains(s)) ||
-                (m.Category != null && m.Category.ToLower().Contains(s)) ||
-                (m.Director != null && m.Director.ToLower().Contains(s))
+                (m.Director != null && m.Director.ToLower().Contains(s)) ||
+                (m.Category != null && m.Category.CategoryName.ToLower().Contains(s))
             );
         }
 
@@ -101,8 +106,8 @@ public class HomeController : Controller
             _context.Movies.Add(movie);
             _context.SaveChanges();
 
-            // Fixed typo: "Conformation" → "Confirmation"
-            return View("Conformation", movie);
+            // IMPORTANT: Your view file is Confirmation.cshtml (not Conformation)
+            return View("Confirmation", movie);
         }
 
         // If validation fails, reload the form with the entered data
@@ -125,5 +130,58 @@ public class HomeController : Controller
     public IActionResult Rocket()
     {
         return View();
+    }
+    // EDIT (GET) - shows the form pre-filled
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var movie = _context.Movies.FirstOrDefault(m => m.MovieId == id);
+
+        if (movie == null)
+            return NotFound();
+
+        return View(movie);
+    }
+
+// EDIT (POST) - saves changes
+    [HttpPost]
+    public IActionResult Edit(Movie updatedMovie)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.Movies.Update(updatedMovie);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // If validation fails, reload the edit form
+        return View(updatedMovie);
+    }
+
+// DELETE (GET) - confirmation screen
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        var movie = _context.Movies.FirstOrDefault(m => m.MovieId == id);
+
+        if (movie == null)
+            return NotFound();
+
+        return View(movie);
+    }
+
+// DELETE (POST) - actually deletes the record
+    [HttpPost]
+    public IActionResult DeleteConfirmed(int movieId)
+    {
+        var movie = _context.Movies.FirstOrDefault(m => m.MovieId == movieId);
+
+        if (movie == null)
+            return NotFound();
+
+        _context.Movies.Remove(movie);
+        _context.SaveChanges();
+
+        return RedirectToAction("Index");
     }
 }

@@ -2,8 +2,8 @@
 @*
     Index.cshtml
     - Displays the full movie collection
-    - Includes search and filter functionality
-    - Receives a LIST of Movie objects from the controller
+    - Includes search + filter functionality (GET so query shows in URL)
+    - Shows Edit/Delete buttons for each movie (Mission 7 requirement)
 *@
 
 @{
@@ -35,8 +35,7 @@
 
 <!-- =========================
      SEARCH + FILTER FORM
-     Uses GET so parameters
-     appear in the URL
+     Uses GET so parameters appear in the URL
 ========================= -->
 <form method="get" class="mt-4 mb-4">
     <div class="row g-2 align-items-end">
@@ -72,7 +71,7 @@
             </select>
         </div>
 
-        <!-- Buttons -->
+        <!-- Buttons row -->
         <div class="col-12 d-flex gap-2 mt-2">
 
             <!-- Apply filters -->
@@ -80,7 +79,7 @@
                 Apply Filters
             </button>
 
-            <!-- Reset filters -->
+            <!-- Reset filters (go back to /Home/Index with no query params) -->
             <a class="btn btn-secondary"
                asp-controller="Home"
                asp-action="Index">
@@ -101,10 +100,7 @@
      RESULTS SECTION
 ========================= -->
 
-@*
-    If the model is null or empty,
-    display a friendly message.
-*@
+@* If the model is null or empty, display a friendly message *@
 @if (Model == null || Model.Count == 0)
 {
     <p>No movies found for your search/filter.</p>
@@ -117,7 +113,7 @@ else
     </p>
 
     <!-- Movie Table -->
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered align-middle">
         <thead class="table-dark">
         <tr>
             <th>Title</th>
@@ -128,32 +124,48 @@ else
             <th>Edited</th>
             <th>Lent To</th>
             <th>Notes</th>
+            <th class="text-center">Actions</th>
         </tr>
         </thead>
 
         <tbody>
-        @*
-            Loop through each movie in the database
-            and display its properties in a table row.
-        *@
+        @* Loop through each movie and display its properties *@
         @foreach (var m in Model)
         {
             <tr>
                 <td>@m.Title</td>
-                <td>@m.Category</td>
+
+                @* Category is a navigation property; display CategoryName safely *@
+                <td>@(m.Category?.CategoryName ?? "")</td>
+
                 <td>@m.Year</td>
                 <td>@m.Director</td>
                 <td>@m.Rating</td>
 
-                <!-- Show Yes/No for Edited, or blank if null -->
-                <td>
-                    @(m.Edited == null
-                        ? ""
-                        : (m.Edited.Value ? "Yes" : "No"))
-                </td>
+                @* Edited is a non-nullable bool in Mission 7 *@
+                <td>@(m.Edited ? "Yes" : "No")</td>
 
                 <td>@m.LentTo</td>
                 <td>@m.Notes</td>
+
+                <!-- ACTION BUTTONS (Edit/Delete) -->
+                <td class="text-center text-nowrap">
+                    @* Edit button takes user to /Home/Edit/{id} *@
+                    <a class="btn btn-sm btn-outline-primary"
+                       asp-controller="Home"
+                       asp-action="Edit"
+                       asp-route-id="@m.MovieId">
+                        Edit
+                    </a>
+
+                    @* Delete button goes to confirmation screen /Home/Delete/{id} *@
+                    <a class="btn btn-sm btn-outline-danger ms-2"
+                       asp-controller="Home"
+                       asp-action="Delete"
+                       asp-route-id="@m.MovieId">
+                        Delete
+                    </a>
+                </td>
             </tr>
         }
         </tbody>

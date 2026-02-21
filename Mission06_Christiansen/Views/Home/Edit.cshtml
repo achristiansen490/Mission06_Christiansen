@@ -1,0 +1,77 @@
+@model Mission06_Christiansen.Models.Movie
+@{
+    ViewData["Title"] = "Edit Movie";
+}
+
+<h2 class="mb-4">Edit Movie</h2>
+
+<form asp-action="Edit" method="post" class="card p-4 shadow-sm">
+
+    <!-- MovieId must be posted back so EF updates the right row -->
+    <input type="hidden" asp-for="MovieId" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Director" class="form-label"></label>
+        <input asp-for="Director" class="form-control" />
+        <span asp-validation-for="Director" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Rating" class="form-label"></label>
+        <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <!-- REQUIRED by Mission 7: Edited -->
+    <div class="mb-3">
+        <label class="form-label">Edited</label>
+        <select asp-for="Edited" class="form-select">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <span asp-validation-for="Edited" class="text-danger"></span>
+    </div>
+
+    <!-- REQUIRED by Mission 7: CopiedToPlex -->
+    <div class="mb-3">
+        <label class="form-label">Copied To Plex</label>
+        <select asp-for="CopiedToPlex" class="form-select">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <span asp-validation-for="CopiedToPlex" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LentTo" class="form-label"></label>
+        <input asp-for="LentTo" class="form-control" />
+        <span asp-validation-for="LentTo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <input asp-for="Notes" class="form-control" />
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

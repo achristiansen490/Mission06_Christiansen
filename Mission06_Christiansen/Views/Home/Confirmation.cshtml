@@ -11,11 +11,8 @@
 <p><strong>Year:</strong> @Model.Year</p>
 <p><strong>Director:</strong> @Model.Director</p>
 <p><strong>Rating:</strong> @Model.Rating</p>
-
-@if (Model.Edited != null)
-{
-    <p><strong>Edited:</strong> @(Model.Edited.Value ? "Yes" : "No")</p>
-}
+<p><strong>Edited:</strong> @(Model.Edited ? "Yes" : "No")</p>
+<p><strong>Copied To Plex:</strong> @(Model.CopiedToPlex ? "Yes" : "No")</p>
 
 @if (!string.IsNullOrWhiteSpace(Model.LentTo))
 {

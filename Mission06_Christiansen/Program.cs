@@ -1,46 +1,49 @@
 using Microsoft.EntityFrameworkCore;
 using Mission06_Christiansen.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-// Add services to the container.
+//
+// 1) Add MVC services (Controllers + Views)
+//
 builder.Services.AddControllersWithViews();
 
+//
+// 2) Register the EF Core DbContext and point it at the PROVIDED SQLite database
+//    (Connection string lives in appsettings.json under "MovieConnection")
+//
 builder.Services.AddDbContext<MovieCollectionContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
 var app = builder.Build();
 
-//use the seeder to put the current csv data into the application
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<MovieCollectionContext>();
-    db.Database.Migrate(); // ensures tables exist
-    DbSeeder.Seed(db, app.Environment.ContentRootPath);
-}
+//
+// IMPORTANT (Mission 7):
+// - Do NOT run DbSeeder.Seed(...)
+// - Do NOT call db.Database.Migrate()
+// We are using the provided database as-is.
+//
 
-// Configure the HTTP request pipeline.
+//
+// 3) Configure the HTTP request pipeline
+//
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();   // Serves images/css/js from wwwroot
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+//
+// 4) Default route: Home/Index
+//
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

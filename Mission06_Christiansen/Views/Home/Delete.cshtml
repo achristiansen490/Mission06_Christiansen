@@ -1,0 +1,19 @@
+@model Mission06_Christiansen.Models.Movie
+@{
+    ViewData["Title"] = "Delete Movie";
+}
+
+<h2 class="mb-3 text-danger">Delete Movie</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete <strong>@Model.Title</strong> (@Model.Year)?
+    This cannot be undone.
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <!-- Name must match DeleteConfirmed parameter -->
+    <input type="hidden" name="movieId" value="@Model.MovieId" />
+
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
